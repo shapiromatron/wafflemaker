@@ -18,22 +18,17 @@ Wafflemaker
      :alt: Updates
 
 
-A python package to generate waffle plots
+A python package to generate waffle plots.
 
 
 * Free software: MIT license
 * Documentation: https://wafflemaker.readthedocs.io.
 
 
-Features
---------
-
-* TODO
-
 Credits
 ---------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template. Cookiecutter and audreyr are awesome.
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
