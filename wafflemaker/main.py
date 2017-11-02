@@ -1,4 +1,3 @@
-"""Methods for creating waffle plots """
 import matplotlib as mpl
 from matplotlib.cm import viridis
 import matplotlib.patches as mpatches

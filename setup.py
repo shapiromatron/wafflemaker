@@ -3,7 +3,16 @@
 
 """The setup script."""
 
+import re
 from setuptools import setup, find_packages
+
+
+def get_version():
+    regex = r"""^__version__ = '(.*)'$"""
+    with open('wafflemaker/__init__.py', 'r') as f:
+        text = f.read()
+    return re.findall(regex, text, re.MULTILINE)[0]
+
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -30,7 +39,7 @@ extras = {
 
 setup(
     name='wafflemaker',
-    version='0.1.0',
+    version=get_version(),
     description="A python package to generate waffle plots",
     long_description=readme + '\n\n' + history,
     author="Andy Shapiro",

@@ -1,4 +1,3 @@
-"""Constants in the library."""
 from enum import Enum
 
 

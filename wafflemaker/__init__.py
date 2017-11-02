@@ -1,5 +1,3 @@
-"""Top-level package for Wafflemaker."""
-
 from .constants import CellFillDirection  # noqa
 from .main import waffle  # noqa
 
