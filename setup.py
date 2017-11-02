@@ -24,6 +24,9 @@ test_requirements = [
     'pytest',
     'pytest-mpl',
 ]
+extras = {
+    'test': test_requirements,
+}
 
 setup(
     name='wafflemaker',
@@ -47,6 +50,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
     ],
+    extras_require=extras,
     test_suite='tests',
     tests_require=test_requirements,
     setup_requires=setup_requirements,

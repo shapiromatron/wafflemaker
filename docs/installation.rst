@@ -30,6 +30,22 @@ To install for development:
     git clone https://github.com/shapiromatron/wafflemaker
     cd wafflemaker
     pip install -e .
-    python setup.py test
+    pip install -e .[test]
+
+To run tests:
+
+.. code-block:: console
+
+    cd wafflemaker
+    py.test
+
+Image comparisons from matplotlib use the excellent `pytest-mpl`_ library. To
+create new baseline images for comparison:
+
+.. code-block:: console
+
+    py.test --mpl-generate-path=tests/baseline
 
 Please submit tests with new feature requests.
+
+.. _`pytest-mpl`: https://pypi.python.org/pypi/pytest-mpl

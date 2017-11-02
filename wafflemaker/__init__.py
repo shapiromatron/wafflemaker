@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """Top-level package for Wafflemaker."""
+
+from .constants import CellFillDirection  # noqa
+from .main import waffle  # noqa
 
 __author__ = """Andy Shapiro"""
 __email__ = 'shapiromatron@gmail.com'

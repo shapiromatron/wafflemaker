@@ -1,5 +1,5 @@
 Welcome to Wafflemaker's documentation!
-======================================
+=======================================
 
 Contents:
 
