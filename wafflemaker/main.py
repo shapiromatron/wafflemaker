@@ -14,7 +14,7 @@ def _fill_plot_matrix(dims, values: np.ndarray, fill_direction):
     tiles = dims[0] * dims[1]
     tiles_per_class = (class_portion * tiles).round()
 
-    class_index = -1
+    class_index = 0
     tile_index = 0
     plot_matrix = np.zeros(dims)
     if fill_direction == CellFillDirection.ByColumn:
@@ -31,6 +31,9 @@ def _fill_plot_matrix(dims, values: np.ndarray, fill_direction):
                 if tile_index > sum(tiles_per_class[0:class_index]):
                     class_index += 1
                 plot_matrix[row, col] = class_index
+
+    # scale from 0 to N-1 instead of 1 to N
+    plot_matrix -= 1
 
     return plot_matrix
 
@@ -143,7 +146,7 @@ def waffle(
             np.arange(0, ncols, 1)
         )
 
-        colors = icon_colormap((plot_matrix)/(plot_matrix.max()))
+        colors = icon_colormap(plot_matrix/plot_matrix.max())
         for i, j in zip(x.flatten(), y.flatten()):
             ax.text(i, j, icon,  color=colors[j, i], **icon_opts)
 
