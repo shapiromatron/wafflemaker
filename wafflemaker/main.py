@@ -14,7 +14,7 @@ def _fill_plot_matrix(dims, values: np.ndarray, fill_direction):
     tiles = dims[0] * dims[1]
     tiles_per_class = (class_portion * tiles).round()
 
-    class_index = 0
+    class_index = -1
     tile_index = 0
     plot_matrix = np.zeros(dims)
     if fill_direction == CellFillDirection.ByColumn:
@@ -64,7 +64,6 @@ class TextLegend(object):
 class TextLegendHandler(object):
     def legend_artist(self, legend, orig_handle, fontsize, handlebox):
         x = handlebox.xdescent + handlebox.width * 0.5
-        y = handlebox.ydescent
         annotation = Text(
             x, 3, orig_handle.text,
             horizontalalignment='center',
@@ -89,6 +88,7 @@ def waffle(
         background_color='#ffffff'
    ):
 
+    # get data values
     if isinstance(values, np.ndarray):
         pass
     elif isinstance(data, pd.DataFrame) and isinstance(values, str):
@@ -96,7 +96,7 @@ def waffle(
     elif isinstance(values, list):
         values = np.array(values)
 
-    # get data
+    # get matrix
     dims = (nrows, ncols)
     plot_matrix = _fill_plot_matrix(dims, values, fill_direction)
 
@@ -111,9 +111,7 @@ def waffle(
                 colormap = mpl.colors.ListedColormap(hue)
 
     # get icon or icon colormap
-    if icon is None:
-        icon_colors = None
-    else:
+    if icon is not None:
         icon_colormap = colormap
         colormap = mpl.colors.ListedColormap([background_color])
 
@@ -145,7 +143,7 @@ def waffle(
             np.arange(0, ncols, 1)
         )
 
-        colors = icon_colormap((plot_matrix - 1)/(plot_matrix.max() - 1))
+        colors = icon_colormap((plot_matrix)/(plot_matrix.max()))
         for i, j in zip(x.flatten(), y.flatten()):
             ax.text(i, j, icon,  color=colors[j, i], **icon_opts)
 
