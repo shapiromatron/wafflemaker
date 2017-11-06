@@ -25,7 +25,7 @@ def df():
 @pytest.mark.mpl_image_compare
 def test_data_list(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values=[4, 3, 2],
         title='data: list'
     ).figure
@@ -34,7 +34,7 @@ def test_data_list(df):
 @pytest.mark.mpl_image_compare
 def test_data_nparray(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values=np.array([4, 3, 2]),
         title='data: np.ndarray'
     ).figure
@@ -43,10 +43,35 @@ def test_data_nparray(df):
 @pytest.mark.mpl_image_compare
 def test_data_dataframe(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values',
         data=df,
         title='data: pd.DataFrame'
+    ).figure
+
+
+# UNSCALED DATA
+@pytest.mark.mpl_image_compare
+def test_unscaled_data_column(df):
+    return waffle(
+        ncols=8,
+        scale_to_dims=False,
+        values=[25, 15, 10],
+        labels=['A', 'B', 'C'],
+        title='data: unscaled, column specified',
+        fill_direction=CellFillDirection.ByRow,
+    ).figure
+
+
+@pytest.mark.mpl_image_compare
+def test_unscaled_data_row(df):
+    return waffle(
+        nrows=4,
+        scale_to_dims=False,
+        values=[25, 15, 10],
+        labels=['A', 'B', 'C'],
+        title='data: unscaled, row specified',
+        fill_direction=CellFillDirection.ByColumn,
     ).figure
 
 
@@ -58,7 +83,7 @@ def test_subplot(df):
     for i, ax in enumerate(axes):
         data = np.random.normal(100, 50, 4)
         data.sort()
-        waffle(7, 5,
+        waffle(nrows=7, ncols=5,
                values=list(reversed(data)),
                title='subplot #%d' % (i + 1),
                ax=ax)
@@ -69,7 +94,7 @@ def test_subplot(df):
 @pytest.mark.mpl_image_compare
 def test_order_row(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', hue='hues', data=df,
         fill_direction=CellFillDirection.ByRow,
         title='layout: row'
@@ -79,7 +104,7 @@ def test_order_row(df):
 @pytest.mark.mpl_image_compare
 def test_order_column(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', hue='hues', data=df,
         fill_direction=CellFillDirection.ByColumn,
         title='layout: column'
@@ -90,7 +115,7 @@ def test_order_column(df):
 @pytest.mark.mpl_image_compare
 def test_legend_dataframe(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', labels='categories', data=df,
         title='legend: pd.DataFrame'
     ).figure
@@ -99,7 +124,7 @@ def test_legend_dataframe(df):
 @pytest.mark.mpl_image_compare
 def test_legend_list(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values',
         labels=['a', 'b', 'c'], data=df,
         title='legend: list'
@@ -109,7 +134,7 @@ def test_legend_list(df):
 @pytest.mark.mpl_image_compare
 def test_legend_long(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values',
         labels=[
             'Supercalifragilisticexpialidocious',
@@ -124,7 +149,7 @@ def test_legend_long(df):
 def test_figure_options(df):
     # custom figsize
     fig = waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', data=df,
         figure_options={'figsize': (10, 10)}
     ).figure
@@ -137,7 +162,7 @@ def test_figure_options(df):
 def test_icon(df):
     # custom figsize
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', labels='categories', data=df,
         icon='\u26AB',
         background_color='#efefef',
@@ -151,7 +176,7 @@ def test_icon(df):
 @pytest.mark.mpl_image_compare
 def test_color_base(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', data=df,
         title='color: default'
     ).figure
@@ -160,7 +185,7 @@ def test_color_base(df):
 @pytest.mark.mpl_image_compare
 def test_color_dataframe(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', hue='hues', data=df,
         title='color: pd.DataFrame'
     ).figure
@@ -169,7 +194,7 @@ def test_color_dataframe(df):
 @pytest.mark.mpl_image_compare
 def test_color_colormap(df):
     return waffle(
-       3, 3,
+       nrows=3, ncols=3,
        values='values', data=df, colormap=mpl.cm.Purples_r,
        title='color: colormap'
     ).figure
@@ -178,7 +203,7 @@ def test_color_colormap(df):
 @pytest.mark.mpl_image_compare
 def test_color_list(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', hue=['#c1d3a2', '#1d4dff', '#cecece'], data=df,
         title='color: list'
     ).figure
@@ -188,7 +213,7 @@ def test_color_list(df):
 @pytest.mark.mpl_image_compare
 def test_background_color(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', data=df,
         background_color='black',
         title='background color: black'
@@ -199,7 +224,7 @@ def test_background_color(df):
 @pytest.mark.mpl_image_compare
 def test_grid_color_base(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', data=df,
         title='grid: base'
     ).figure
@@ -208,7 +233,7 @@ def test_grid_color_base(df):
 @pytest.mark.mpl_image_compare
 def test_grid_color_altered(df):
     return waffle(
-        3, 3,
+        nrows=3, ncols=3,
         values='values', data=df,
         grid_options=dict(color='black', linewidth=25),
         title='grid: custom'

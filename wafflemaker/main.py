@@ -9,10 +9,13 @@ import pandas as pd
 from .constants import CellFillDirection
 
 
-def _fill_plot_matrix(dims, values: np.ndarray, fill_direction):
-    class_portion = values / values.sum()
-    tiles = dims[0] * dims[1]
-    tiles_per_class = (class_portion * tiles).round()
+def _fill_plot_matrix(dims, values, fill_direction, scale_to_dims):
+    if scale_to_dims:
+        class_portion = values / values.sum()
+        tiles = dims[0] * dims[1]
+        tiles_per_class = (class_portion * tiles).round()
+    else:
+        tiles_per_class = values.astype(int)
 
     class_index = 0
     tile_index = 0
@@ -23,6 +26,8 @@ def _fill_plot_matrix(dims, values: np.ndarray, fill_direction):
                 tile_index += 1
                 if tile_index > sum(tiles_per_class[0:class_index]):
                     class_index += 1
+                if class_index > values.size:
+                    break
                 plot_matrix[row, col] = class_index
     else:
         for row in reversed(range(dims[0])):
@@ -30,10 +35,15 @@ def _fill_plot_matrix(dims, values: np.ndarray, fill_direction):
                 tile_index += 1
                 if tile_index > sum(tiles_per_class[0:class_index]):
                     class_index += 1
+                if class_index > values.size:
+                    break
                 plot_matrix[row, col] = class_index
 
-    # scale from 0 to N-1 instead of 1 to N
+    # scale to 0 to n-1 instead of 1 to n
     plot_matrix -= 1
+
+    # mask values outside upper range
+    plot_matrix = np.ma.masked_values(plot_matrix, -1.)
 
     return plot_matrix
 
@@ -78,9 +88,9 @@ class TextLegendHandler(object):
 
 
 def waffle(
-        nrows, ncols, values=None,
+        nrows=None, ncols=None, values=None,
         labels=None, hue=None, data=None,
-        rescale=True,
+        scale_to_dims=True,
         icon=None,
         icon_options=None,
         fill_direction=CellFillDirection.ByColumn,
@@ -99,9 +109,23 @@ def waffle(
     elif isinstance(values, list):
         values = np.array(values)
 
+    # validation checks
+    if scale_to_dims:
+        if nrows is None or ncols is None:
+            raise ValueError('If data are scaled to dimensions, row and column must be specified')
+    else:
+        if nrows is None and ncols is None:
+            raise ValueError('If data are not scaled to dimensions, row or column must be specified')
+        elif nrows is None:
+            nrows = np.ceil(values.sum()/ncols).astype(int)
+        elif ncols is None:
+            ncols = np.ceil(values.sum()/nrows).astype(int)
+        else:
+            pass
+
     # get matrix
     dims = (nrows, ncols)
-    plot_matrix = _fill_plot_matrix(dims, values, fill_direction)
+    plot_matrix = _fill_plot_matrix(dims, values, fill_direction, scale_to_dims)
 
     # get colormap
     if colormap is None:
@@ -112,6 +136,9 @@ def waffle(
                 colormap = mpl.colors.ListedColormap(data[hue].values)
             elif isinstance(hue, list):
                 colormap = mpl.colors.ListedColormap(hue)
+
+    # set masked items to background color
+    colormap.set_bad(color=background_color)
 
     # get icon or icon colormap
     if icon is not None:
@@ -184,6 +211,7 @@ def waffle(
             child.set_color('w')
 
     # draw legend
+    lgd = None
     if show_legend and labels is not None:
 
         if isinstance(labels, list):
@@ -224,10 +252,12 @@ def waffle(
             )
             lgd = ax.legend(patches, lbls, **legend_args)
 
-        _resize_figure(ax, lgd)
-
     # add title if exists
     if title is not None:
+        print(title)
         ax.title.set_text(title)
+
+    if lgd:
+        _resize_figure(ax, lgd)
 
     return ax
