@@ -185,6 +185,21 @@ def test_icon(df):
     ).figure
 
 
+@pytest.mark.mpl_image_compare
+def test_unscaled_icon(df):
+    # custom figsize
+    return waffle(
+        nrows=5,
+        values='values', labels='categories', hue='hues', data=df,
+        icon='\u2764',
+        scale_to_dims=False,
+        background_color='grey',
+        icon_options=dict(fontsize=100),
+        grid_options=dict(color='black', linewidth=10),
+        title='icon: custom icon'
+    ).figure
+
+
 # COLOR
 @pytest.mark.mpl_image_compare
 def test_color_base(df):

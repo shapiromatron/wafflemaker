@@ -171,14 +171,11 @@ def waffle(
         if icon_options is not None:
             icon_opts.update(icon_options)
 
-        x, y = np.meshgrid(
-            np.arange(0, nrows, 1),
-            np.arange(0, ncols, 1)
-        )
-
         colors = icon_colormap(plot_matrix/plot_matrix.max())
-        for i, j in zip(x.flatten(), y.flatten()):
-            ax.text(i, j, icon,  color=colors[j, i], **icon_opts)
+        for i in range(nrows):
+            for j in range(ncols):
+                if plot_matrix[i,j] != -1:
+                    ax.text(j, i, icon, color=colors[i, j], **icon_opts)
 
     ax.set_xticks(np.arange(-0.5, ncols, 1), minor=True)
     ax.set_yticks(np.arange(-0.5, nrows, 1), minor=True)
@@ -257,7 +254,6 @@ def waffle(
 
     # add title if exists
     if title is not None:
-        print(title)
         ax.title.set_text(title)
 
     if lgd:
