@@ -121,7 +121,10 @@ def waffle(
         elif ncols is None:
             ncols = np.ceil(values.sum()/nrows).astype(int)
         else:
-            pass
+            if nrows * ncols < values.sum():
+                raise ValueError('Available cells less than values; change scale_to_dims == True')
+            else:
+                pass
 
     # get matrix
     dims = (nrows, ncols)

@@ -51,6 +51,19 @@ def test_data_dataframe(df):
 
 
 # UNSCALED DATA
+def test_unscaled_validation():
+    fail_kwargs = [
+        dict(values=[10, 20]),
+        dict(nrows=3, values=[10, 20]),
+        dict(ncols=3, values=[10, 20]),
+        dict(scale_to_dims=False, values=[10, 20]),
+        dict(nrows=3, ncols=3, scale_to_dims=False, values=[10, 20])
+    ]
+    for kwargs in fail_kwargs:
+        with pytest.raises(ValueError):
+            waffle(**kwargs)
+
+
 @pytest.mark.mpl_image_compare
 def test_unscaled_data_column(df):
     return waffle(
