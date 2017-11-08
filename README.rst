@@ -2,34 +2,49 @@
 Wafflemaker
 ===========
 
-
 .. image:: https://img.shields.io/pypi/v/wafflemaker.svg
         :target: https://pypi.python.org/pypi/wafflemaker
 
-.. image:: https://img.shields.io/travis/shapiromatron/wafflemaker.svg
-        :target: https://travis-ci.org/shapiromatron/wafflemaker
-
-.. image:: https://readthedocs.org/projects/wafflemaker/badge/?version=latest
-        :target: https://wafflemaker.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-
-.. image:: https://pyup.io/repos/github/shapiromatron/wafflemaker/shield.svg
-     :target: https://pyup.io/repos/github/shapiromatron/wafflemaker/
-     :alt: Updates
-
-
 A python package to generate waffle plots.
 
+.. image:: ./tests/baseline/test_icon.png
+   :name: my picture
 
-* Free software: MIT license
-* Documentation: https://wafflemaker.readthedocs.io.
 
+Installation
+============
 
-Credits
----------
+To install the latest stable version, run this command in your terminal:
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+.. code-block:: console
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+    pip install -U wafflemaker
 
+To install the development version:
+
+.. code-block:: console
+
+    git clone https://github.com/shapiromatron/wafflemaker
+    cd wafflemaker
+    pip install -e .
+    pip install -e .[test]
+
+To run tests:
+
+.. code-block:: console
+
+    cd wafflemaker
+    py.test
+
+Image comparisons from matplotlib use the `pytest-mpl`_ library. To
+create new baseline images for comparison:
+
+.. code-block:: console
+
+    py.test --mpl-generate-path=tests/baseline
+
+Please submit tests with new feature requests.
+
+.. _`pytest-mpl`: https://pypi.python.org/pypi/pytest-mpl
+
+.. include:: HISTORY.rst
