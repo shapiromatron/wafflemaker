@@ -69,20 +69,24 @@ def _resize_figure(ax, lgd):
 
 
 class TextLegend(object):
-    def __init__(self, text, color):
+    def __init__(self, text, color, **opts):
         self.text = text
         self.color = color
+        self.opts = opts
 
 
 class TextLegendHandler(object):
     def legend_artist(self, legend, orig_handle, fontsize, handlebox):
         x = handlebox.xdescent + handlebox.width * 0.5
-        annotation = Text(
-            x, 3, orig_handle.text,
+
+        text_opts = dict(
             horizontalalignment='center',
             verticalalignment='center',
             color=orig_handle.color,
-            fontsize=20)
+        )
+        text_opts.update(orig_handle.opts)
+
+        annotation = Text(x, 3, orig_handle.text, **text_opts)
         handlebox.add_artist(annotation)
         return annotation
 
@@ -93,6 +97,7 @@ def waffle(
         scale_to_dims=True,
         icon=None,
         icon_options=None,
+        icon_legend_options=None,
         fill_direction=CellFillDirection.ByColumn,
         colormap=None, grid_options=None,
         figure_options=None,
@@ -174,7 +179,7 @@ def waffle(
         colors = icon_colormap(plot_matrix/plot_matrix.max())
         for i in range(nrows):
             for j in range(ncols):
-                if plot_matrix[i,j] != -1:
+                if plot_matrix[i, j] != -1:
                     ax.text(j, i, icon, color=colors[i, j], **icon_opts)
 
     ax.set_xticks(np.arange(-0.5, ncols, 1), minor=True)
@@ -239,9 +244,14 @@ def waffle(
             patches = []
             lbls = []
 
+            icon_legend_opts = {}
+            icon_legend_opts.update(icon_opts)
+            if icon_legend_options is not None:
+                icon_legend_opts.update(icon_legend_options)
+
             for i, label in enumerate(labels):
                 color = icon_colormap(float(i)/(len(labels) - 1))
-                patches.append(TextLegend(icon, color))
+                patches.append(TextLegend(icon, color, **icon_legend_opts))
                 lbls.append(label)
 
             legend_args = dict(

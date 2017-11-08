@@ -3,11 +3,15 @@
 
 """Tests for `wafflemaker` package."""
 
+import tempfile
+
 import numpy as np
-import pytest
+import matplotlib.font_manager as fm
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
+import pytest
+import requests
 
 from wafflemaker import waffle, CellFillDirection
 
@@ -179,7 +183,8 @@ def test_icon(df):
         values='values', labels='categories', data=df,
         icon='\u26AB',
         background_color='#efefef',
-        icon_options=dict(fontsize=100),
+        icon_options=dict(fontsize=130),
+        icon_legend_options=dict(fontsize=30),
         grid_options=dict(color='#eaeaea', linewidth=10),
         title='icon: custom icon'
     ).figure
@@ -190,11 +195,12 @@ def test_unscaled_icon(df):
     # custom figsize
     return waffle(
         nrows=5,
-        values='values', labels='categories', hue='hues', data=df,
+        values='values', labels='categories', hue=['r', 'g', 'b'], data=df,
         icon='\u2764',
         scale_to_dims=False,
         background_color='grey',
-        icon_options=dict(fontsize=100),
+        icon_options=dict(fontsize=75),
+        icon_legend_options=dict(fontsize=30),
         grid_options=dict(color='black', linewidth=10),
         title='icon: custom icon'
     ).figure
@@ -266,3 +272,62 @@ def test_grid_color_altered(df):
         grid_options=dict(color='black', linewidth=25),
         title='grid: custom'
     ).figure
+
+
+# DOCUMENTATION
+@pytest.mark.mpl_image_compare
+def test_docs_household_debt(df):
+    # https://github.com/hrbrmstr/waffle
+    # http://www.nytimes.com/2008/07/20/business/20debt.html
+    df = pd.DataFrame(dict(
+        values=[84911, 14414, 10062, 8565],
+        categories=['Mortgage ($85k)', 'Auto and tuition loans ($14k)', 'Home equity loans ($10k)', 'Credit cards ($9k)'],
+        hues=["#c7d4b6", "#a3aabd", "#a0d0de", "#97b5cf"]
+    ))
+
+    df['scaled_values'] = df['values'] / 500.
+
+    return waffle(
+        nrows=7,
+        scale_to_dims=False,
+
+        data=df,
+        values='scaled_values',
+        labels='categories',
+        hue='hues',
+
+        title='Average Household Debt',
+        grid_options=dict(linewidth=2),
+        figure_options=dict(figsize=(14, 5)),
+
+    ).figure
+
+
+@pytest.mark.mpl_image_compare
+def test_docs_icon(df):
+    font_awesome_url = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf'
+    tf = tempfile.NamedTemporaryFile()
+    r = requests.get(font_awesome_url)
+    with open(tf.name, 'wb') as f:
+        f.write(r.content)
+
+    # use font in waffle plot
+    prop = fm.FontProperties(fname=tf.name)
+
+    # build plot
+    figure = waffle(
+            nrows=3, ncols=3,
+            values='values', labels='categories', data=df,
+            colormap=mpl.cm.cool,
+            icon='\uf015',
+            background_color='#efefef',
+            icon_options=dict(fontproperties=prop, size=85),
+            icon_legend_options=dict(size=20),
+            grid_options=dict(color='#eaeaea', linewidth=15),
+            title='icon: custom icon'
+        ).figure
+
+    # delete temporary font
+    tf.close()
+
+    return figure
