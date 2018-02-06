@@ -3,15 +3,18 @@ Wafflemaker
 ===========
 
 .. image:: https://img.shields.io/pypi/v/wafflemaker.svg
-        :target: https://pypi.python.org/pypi/wafflemaker
+    :target: https://pypi.python.org/pypi/wafflemaker
 
-A python package to generate waffle plots.
+A python package to generate waffle plots. Originally inspired by this [stack overflow](https://stackoverflow.com/questions/41400136) question.
 
 .. image:: ./tests/baseline/test_docs_household_debt.png
    :name: my picture
 
-Code used to generate this example, based on examples from the excellent R-based
-`waffle`_ library:
+Related project: `PyWaffle`_.
+
+.._`PyWaffle`: https://github.com/ligyxy/PyWaffle
+
+Code used to generate this example, based on examples from the excellent R-based `waffle`_ library:
 
 .. _`waffle`: https://github.com/hrbrmstr/waffle
 
